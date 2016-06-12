@@ -5,8 +5,8 @@ import pprint
 import sys
 import urllib2
 
-userKey = "USER_KEY"
-apiKey = "API_KEY"
+userKey = ""
+apiKey = ""
 
 def get_data(url):
     try:
@@ -19,7 +19,19 @@ def send_message(message):
     init(apiKey)
     Client(userKey).send_message(message, title="Weather Forecast")
 
+def load_settings():
+    with open("weather.conf") as f:
+        for line in f:
+            split = line.split("=")
+            if split[0] == "apiKey":
+                global apiKey
+                apiKey = split[1].rstrip()
+            elif split[0] == "userKey":
+                global userKey
+                userKey = split[1].rstrip()
+
 def main():
+    load_settings()
     url = "http://metservice.com/publicData/localforecast"
     city = "Hamilton"
     if len(sys.argv) == 2:
